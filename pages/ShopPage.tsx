@@ -1,73 +1,127 @@
-import React from 'react';
-// Importa l'array di immagini dal file index della cartella
-import { shopImages } from './ContentShopPage';
+/// <reference types="vite/client" />
+import React, { useState, useEffect } from "react";
+
+// 🔹 Tipizzazione articolo
+type ShirtItem = {
+  id: number;
+  title: string;
+  price: string;
+  images: string[];
+};
 
 const ShopPage: React.FC = () => {
-    // Aggiungiamo un controllo per assicurarci di avere esattamente 10 immagini
-    if (shopImages.length < 10) {
-        return (
-            <section className="bg-black text-white min-h-screen flex items-center justify-center">
-                <p className="text-red-500">Errore: Sono necessarie 10 immagini nella cartella ContentShopPage.</p>
-            </section>
-        );
-    }
+  const [shirts, setShirts] = useState<ShirtItem[]>([]);
+  const [cart, setCart] = useState<string[]>([]);
 
-    // Dividiamo l'array di immagini in sezioni per il layout
-    const imageRow1 = shopImages.slice(0, 1); // La prima immagine
-    const imageRow2 = shopImages.slice(1, 4); // Le successive 3
-    const imageRow3 = shopImages.slice(4, 6); // Le successive 2
-    const imageRow4 = shopImages.slice(6, 9); // Le successive 3
-    const imageRow5 = shopImages.slice(9, 10); // L'ultima immagine
+  // 🔹 Caricamento dinamico immagini
+  useEffect(() => {
+    // import.meta.glob permette di importare automaticamente tutte le immagini in una cartella (Vite)
+    const images = import.meta.glob("/pages/shirts/*/*.jpg", { eager: true }) as Record<
+      string,
+      { default: string }
+    >;
 
-    // Componente riutilizzabile per un'immagine con effetto hover
-    const ImageTile = ({ src, alt }: { src: string; alt: string }) => (
-        <div className="overflow-hidden rounded-lg shadow-lg">
-            <img 
-                src={src} 
-                alt={alt} 
-                className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-105"
-            />
-        </div>
-    );
+    // Raggruppa immagini per cartella
+    const folders: Record<string, string[]> = {};
+    Object.entries(images).forEach(([path, mod]) => {
+      const folder = path.split("/shirts/")[1].split("/")[0];
+      if (!folders[folder]) folders[folder] = [];
+      folders[folder].push(mod.default);
+    });
+
+    // Crea lista articoli
+    const generatedShirts = Object.entries(folders).map(([folder, imgs], i) => ({
+      id: i + 1,
+      title: folder.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+      price: `${35 + i * 2},00 €`, // prezzo generico (puoi personalizzarlo)
+      images: imgs.sort(), // front/back
+    }));
+
+    setShirts(generatedShirts);
+  }, []);
+
+  const handleAddToCart = (title: string) => {
+    setCart((prev) => [...prev, title]);
+    alert(`${title} è stata aggiunta al carrello 🛒`);
+  };
+
+  const ProductCard: React.FC<{ title: string; price: string; images: string[] }> = ({
+    title,
+    price,
+    images,
+  }) => {
+    const [hovered, setHovered] = useState(false);
+    const toggleImage = () => setHovered((prev) => !prev);
 
     return (
-        <section className="bg-black text-white min-h-screen py-28 px-4 sm:px-6 lg:px-8">
-            <div className="container mx-auto text-center mb-12 animate-fade-in">
-                <h1 className="text-4xl md:text-5xl font-extrabold text-yellow-400 mb-4">
-                    Il Nostro Shop
-                </h1>
-                <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
-                    Benvenuto nella sezione shop! Dai un'occhiata ai nostri prodotti esclusivi.
-                </p>
-            </div>
+      <div
+        className="group relative bg-neutral-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onTouchStart={toggleImage}
+      >
+        {/* Immagine */}
+        <div className="aspect-square w-full overflow-hidden">
+          <img
+            src={hovered ? images[1] : images[0]}
+            alt={title}
+            className="w-full h-full object-cover transition-opacity duration-500"
+            loading="lazy"
+          />
+        </div>
 
-            {/* Contenitore della griglia delle immagini */}
-            <div className="max-w-7xl mx-auto space-y-4 md:space-y-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-                
-                {/* Riga 1: 1 immagine grande */}
-                {imageRow1.map((src, index) => <ImageTile key="row1-0" src={src} alt={`Prodotto ${index + 1}`} />)}
+        {/* Dettagli */}
+        <div className="p-4 flex flex-col items-center text-center space-y-2">
+          <h2 className="text-lg font-semibold text-white">{title}</h2>
+          <p className="text-yellow-400 font-medium">{price}</p>
 
-                {/* Riga 2: 3 immagini */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                    {imageRow2.map((src, index) => <ImageTile key={`row2-${index}`} src={src} alt={`Prodotto ${index + 2}`} />)}
-                </div>
-
-                {/* Riga 3: 2 immagini */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                    {imageRow3.map((src, index) => <ImageTile key={`row3-${index}`} src={src} alt={`Prodotto ${index + 5}`} />)}
-                </div>
-
-                {/* Riga 4: 3 immagini */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                    {imageRow4.map((src, index) => <ImageTile key={`row4-${index}`} src={src} alt={`Prodotto ${index + 7}`} />)}
-                </div>
-
-                {/* Riga 5: 1 immagine grande */}
-                {imageRow5.map((src, index) => <ImageTile key="row5-0" src={src} alt={`Prodotto ${index + 10}`} />)}
-
-            </div>
-        </section>
+          <button
+            onClick={() => handleAddToCart(title)}
+            className="mt-2 px-5 py-2 rounded-full bg-yellow-400 text-black font-semibold transition-all duration-300 hover:bg-yellow-300 active:scale-95"
+          >
+            Aggiungi al carrello
+          </button>
+        </div>
+      </div>
     );
+  };
+
+  return (
+    <section className="bg-black text-white min-h-screen py-28 px-4 sm:px-6 lg:px-8">
+      {/* Header */}
+      <div className="container mx-auto text-center mb-16 animate-fade-in">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-yellow-400 mb-4">
+          Il Nostro Shop
+        </h1>
+        <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+          Scopri tutte le nostre magliette esclusive — design unici, qualità top.
+        </p>
+      </div>
+
+      {/* Griglia dinamica */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 animate-fade-in">
+        {shirts.length > 0 ? (
+          shirts.map((shirt) => (
+            <ProductCard
+              key={shirt.id}
+              title={shirt.title}
+              price={shirt.price}
+              images={shirt.images}
+            />
+          ))
+        ) : (
+          <p className="col-span-full text-center text-gray-400">Caricamento articoli...</p>
+        )}
+      </div>
+
+      {/* Carrello */}
+      {cart.length > 0 && (
+        <div className="fixed bottom-6 right-6 bg-yellow-400 text-black rounded-full shadow-xl px-5 py-3 font-semibold">
+          🛍️ {cart.length} {cart.length === 1 ? "articolo" : "articoli"} nel carrello
+        </div>
+      )}
+    </section>
+  );
 };
 
 export default ShopPage;
