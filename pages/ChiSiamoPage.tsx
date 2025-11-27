@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Assicurati che il percorso dell'immagine sia corretto.
-const IMAGE_URL = "Screenshot 2025-10-08 192241.jpg"; 
+const IMAGE_URL = "cortocircuito-events\components\volty.jpg"; 
 
 const ChiSiamoPage: React.FC = () => {
     return (
