@@ -124,9 +124,9 @@ const EventiPage: React.FC = () => {
         <div className="bg-black text-white min-h-screen animate-fade-in">
             <div className="container mx-auto px-6 py-16 md:py-32 text-center">
                 <h1 className="text-4xl md:text-6xl font-extrabold mb-4">I Nostri Eventi</h1>
-                 <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-16">
+                {/* <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-16"> */}
                     {/* Dalle convention aziendali ai lanci di prodotto, dai concerti privati alle celebrazioni esclusive, progettiamo e realizziamo eventi che superano ogni aspettativa. Scopri cosa possiamo creare per te. */}
-                 </p>
+                     {/* </p> */}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {events.map((event) => (
