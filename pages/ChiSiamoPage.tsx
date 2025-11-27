@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Assicurati che il percorso dell'immagine sia corretto.
-const IMAGE_URL = "/cortocircuito-events\components\volty.jpg"; 
+const IMAGE_URL = "/cortocircuitosite/components/volty.jpg"; 
 
 const ChiSiamoPage: React.FC = () => {
     return (
