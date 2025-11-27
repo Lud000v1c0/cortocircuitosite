@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Assicurati che il percorso dell'immagine sia corretto.
-const IMAGE_URL = "cortocircuito-events\components\volty.jpg"; 
+const IMAGE_URL = "/cortocircuito-events\components\volty.jpg"; 
 
 const ChiSiamoPage: React.FC = () => {
     return (
@@ -32,7 +32,7 @@ const ChiSiamoPage: React.FC = () => {
                 {/* Aggiunta la classe 'animate-entrance' */}
                 <div className="md:w-2/5 w-full relative overflow-hidden h-96 md:h-auto animate-entrance">
                     <img 
-                        src="/components/volty.jpg"
+                        src="/pagess/volty.jpg"
                         alt="Volty"
                         className="object-cover h-full w-full"
                     />
