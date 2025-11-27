@@ -32,7 +32,7 @@ const ChiSiamoPage: React.FC = () => {
                 {/* Aggiunta la classe 'animate-entrance' */}
                 <div className="md:w-2/5 w-full relative overflow-hidden h-96 md:h-auto animate-entrance">
                     <img 
-                        src="/pagess/volty.jpg"
+                        src="/pages/volty.jpg"
                         alt="Volty"
                         className="object-cover h-full w-full"
                     />
