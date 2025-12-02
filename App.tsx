@@ -9,6 +9,7 @@ import ChiSiamoPage from './pages/ChiSiamoPage';
 import ContattiPage from './pages/ContattiPage';
 import Footer from './components/Footer';
 import ShopPage from './pages/ShopPage';
+import { Analytics } from "@vercel/analytics/react"
 
 
 export type Page = 'home' | 'eventi' | 'galleria' | 'chisiamo' | 'contatti' | 'ShopPage';
@@ -47,15 +48,16 @@ const App: React.FC = () => {
     return (
         <>
             {loading && <Lightning />}
-            <div className={`transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
-                <div className="relative z-10 min-h-screen text-white font-sans overflow-x-hidden flex flex-col">
-                    <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
-                    <main className="flex-grow">
-                        {renderPage()}
-                    </main>
-                    <Footer />
+                <div className={`transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
+                    <div className="relative z-10 min-h-screen text-white font-sans overflow-x-hidden flex flex-col">
+                        <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
+                        <main className="flex-grow">
+                            {renderPage()}
+                        </main>
+                        <Footer />
+                    </div>
                 </div>
-            </div>
+            <Analytics />
         </>
     );
 };
